@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/btnAddTask"
+        android:layout_width="124dp"
+        android:layout_height="119dp"
+        android:layout_marginBottom="116dp"
+        android:text="ПУШ"
+        app:layout_constraintBottom_toTopOf="@+id/taskDesc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.108"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/taskTitle"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:hint="Task Title"
+        app:layout_constraintBottom_toTopOf="@+id/taskDesc"
+        app:layout_constraintEnd_toEndOf="@+id/taskDesc"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/taskDesc" />
+
+    <EditText
+        android:id="@+id/taskDesc"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:hint="Task Description"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.386"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.812" />
+
+    <Button
+        android:id="@+id/goToSettings"
+        android:layout_width="95dp"
+        android:layout_height="63dp"
+        android:layout_marginTop="8dp"
+        android:text="налаштунки"
+        app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
+        app:layout_constraintEnd_toStartOf="@+id/goToReminders"
+        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.046" />
+
+    <Button
+        android:id="@+id/goToReminders"
+        android:layout_width="99dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="24dp"
+        android:background="#19B2CA"
+        android:text="нагадування"
+        android:textColorLink="#0927DB"
+        app:layout_constraintBottom_toBottomOf="@+id/goToSettings"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/goToSettings"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="192dp"
+        android:layout_height="117dp"
+        android:layout_marginTop="8dp"
+        android:text="Статус"
+        app:layout_constraintEnd_toStartOf="@+id/goToReminders"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/goToSettings"
+        app:layout_constraintTop_toBottomOf="@+id/goToSettings" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

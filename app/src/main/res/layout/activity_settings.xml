@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="192dp"
+        android:layout_height="117dp"
+        android:layout_marginBottom="12dp"
+        android:text="Статус"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Налаштунки"
+        app:layout_constraintBottom_toTopOf="@+id/CalendarFiled"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.837" />
+
+    <TextView
+        android:id="@+id/CalUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="CalendarURL"
+        app:layout_constraintBottom_toBottomOf="@+id/CalendarFiled"
+        app:layout_constraintEnd_toStartOf="@+id/CalendarFiled"
+        app:layout_constraintTop_toTopOf="@+id/CalendarFiled" />
+
+    <TextView
+        android:id="@+id/calUrl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="37dp"
+        android:layout_marginEnd="20dp"
+        android:text="Password"
+        app:layout_constraintBottom_toBottomOf="@+id/PasswordfFiled"
+        app:layout_constraintEnd_toStartOf="@+id/PasswordfFiled"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/PasswordfFiled" />
+
+    <EditText
+        android:id="@+id/PasswordfFiled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="272dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/CalendarFiled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="216dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnGoToMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Зберегти та вийти"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.629" />
+
+    <TextView
+        android:id="@+id/pp1"
+        android:layout_width="197dp"
+        android:layout_height="44dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toBottomOf="@+id/btnGoToMain" />
+
+    <TextView
+        android:id="@+id/pp2"
+        android:layout_width="192dp"
+        android:layout_height="49dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toBottomOf="@+id/pp1" />
+
+    <TextView
+        android:id="@+id/pp3"
+        android:layout_width="188dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toBottomOf="@+id/pp2" />
+
+    <TextView
+        android:id="@+id/pp4"
+        android:layout_width="188dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toBottomOf="@+id/pp3" />
+
+    <Switch
+        android:id="@+id/switchUseOffline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="OfflineAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PasswordfFiled" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ім'я календаря буде обрано &quot;KappaDAV&quot;"
+        app:layout_constraintEnd_toEndOf="@+id/switchUseOffline"
+        app:layout_constraintStart_toStartOf="@+id/switchUseOffline"
+        app:layout_constraintTop_toBottomOf="@+id/switchUseOffline" />
+</androidx.constraintlayout.widget.ConstraintLayout>
