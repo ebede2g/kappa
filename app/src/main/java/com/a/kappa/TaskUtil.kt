@@ -199,10 +199,21 @@ object TaskUtil {
 
 
     //шукає на серері список тасків та скачує його в локлаьний календар
-    fun AddLocalTaskFromCalDavList(context: Context, listOfIcsFilesToGet: List<String>) {
+    fun AddLocalTaskFromCalDavList(context: Context, listOfIcsFilesToGet: List<String>, onFinished: () -> Unit) {
         val urlBase = UserPrefs.getUrl().trimEnd('/')
         val name = UserPrefs.getUserName()
         val pwd = UserPrefs.getPwd()
+
+        if (listOfIcsFilesToGet.isEmpty()) {
+            onFinished()  // Якщо немає файлів, відразу викликаємо onFinished
+            return
+        }
+
+        var completedRequests = 0
+        val totalRequests = listOfIcsFilesToGet.size
+
+        // синхронізація для роботи з completedRequests
+        val lock = Any()
 
         for (fileName in listOfIcsFilesToGet) {
             val fileUrl = "$urlBase/$fileName.ics"
@@ -217,12 +228,14 @@ object TaskUtil {
             OkHttpClient().newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     Log.e("TASK", "Failed to get $fileName: ${e.message}")
+                    checkIfAllCompleted()
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         if (!response.isSuccessful) {
                             Log.e("TASK", "Failed to get $fileName: ${response.code} ${response.message}")
+                            checkIfAllCompleted()
                             return
                         }
                         val bodyStr = response.body?.string()
@@ -237,11 +250,23 @@ object TaskUtil {
 
                         Log.d("TASK", "Title: $title")
                         Log.d("TASK", "Description: $description")
+
+                        checkIfAllCompleted()
+                    }
+                }
+
+                private fun checkIfAllCompleted() {
+                    synchronized(lock) {
+                        completedRequests++
+                        if (completedRequests == totalRequests) {
+                            onFinished()
+                        }
                     }
                 }
             })
         }
     }
+
 
 
 

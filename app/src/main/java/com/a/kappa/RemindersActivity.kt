@@ -117,8 +117,13 @@ class RemindersActivity : AppCompatActivity() {
                 if (missingEvents.isEmpty()) {
                     Log.d("TASK", "Бракує подій немає")
                 } else {
-                    TaskUtil.AddLocalTaskFromCalDavList(this, missingEvents)
                     missingEvents.forEach { Log.d("TASK", it) }
+                    TaskUtil.AddLocalTaskFromCalDavList(this, missingEvents){
+                        //очікує поки виконає
+                        runOnUiThread {
+                            refreshEvents()
+                        }
+                    }
                 }
             } else {
                 Log.d("TASK", "Не вдалося отримати дані з CalDAV")
@@ -161,7 +166,14 @@ class RemindersActivity : AppCompatActivity() {
 
         val btnSync = findViewById<Button>(R.id.sync)
         btnSync.setOnClickListener{
-            syncClinetToServer(this)
+            ChekUtil.isOnline(this) { online ->
+                if (online) {
+                    syncClinetToServer(this)
+                    //refreshEvents()
+                } else {
+                    Toast.makeText(this, "Неможливо синхронізуватись. Не підключено сервер або ви сервер поза досяжністю", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
 
