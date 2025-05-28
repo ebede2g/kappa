@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 
 object TaskUtil {
 
-    private fun convertMillisToLocalDateTimeString(startMillis: Long): String {
+    fun convertMillisToLocalDateTimeString(startMillis: Long): String {
         val instant = Instant.ofEpochMilli(startMillis)
         val zone = ZoneId.systemDefault()
         val localDateTime = instant.atZone(zone).toLocalDateTime()
@@ -55,19 +55,17 @@ object TaskUtil {
 
     fun AddServerTask(title: String, description: String, startMillis: Long) {
         Log.d("TASK","----AddServerTasks----")
-        val formatter = DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss")
 
         val startDateTime = convertMillisToLocalDateTimeString(startMillis)
         val dueDateTime = convertMillisToLocalDateTimeString(startMillis + 60_000) // +1 хв
 
-        val uid = DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
-            .format(LocalDateTime.now())
+
 
         val url = UserPrefs.getUrl()
         val name = UserPrefs.getUserName()
         val pwd = UserPrefs.getPwd()
 
-        val fileName = "$title-$uid.ics"
+        val fileName = title+startDateTime+".ics"
         val fullUrl = "$url$fileName"
 
         Log.d("TASK_LOG", "Full URL: $fullUrl")
@@ -77,7 +75,7 @@ object TaskUtil {
         VERSION:2.0
         PRODID:-//MyApp//EN
         BEGIN:VTODO
-        UID:$uid
+        UID:$fileName
         DTSTAMP:$startDateTime
         DTSTART:$startDateTime
         DUE:$dueDateTime
@@ -190,6 +188,114 @@ object TaskUtil {
             })
         }
     }
+
+
+
+
+
+
+
+
+
+
+    //шукає на серері список тасків та скачує його в локлаьний календар
+    fun AddLocalTaskFromCalDavList(context: Context, listOfIcsFilesToGet: List<String>) {
+        val urlBase = UserPrefs.getUrl().trimEnd('/')
+        val name = UserPrefs.getUserName()
+        val pwd = UserPrefs.getPwd()
+
+        for (fileName in listOfIcsFilesToGet) {
+            val fileUrl = "$urlBase/$fileName.ics"
+            Log.d("TASK", "Requesting file: $fileUrl")
+
+            val request = Request.Builder()
+                .url(fileUrl)
+                .get()
+                .header("Authorization", Credentials.basic(name, pwd))
+                .build()
+
+            OkHttpClient().newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.e("TASK", "Failed to get $fileName: ${e.message}")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    response.use {
+                        if (!response.isSuccessful) {
+                            Log.e("TASK", "Failed to get $fileName: ${response.code} ${response.message}")
+                            return
+                        }
+                        val bodyStr = response.body?.string()
+                        Log.d("TASK", "File $fileName content received")
+
+                        val title = Regex("""SUMMARY:(.+)""").find(bodyStr ?: "")?.groups?.get(1)?.value ?: "No title"
+                        val description = Regex("""DESCRIPTION:(.+)""").find(bodyStr ?: "")?.groups?.get(1)?.value ?: "No description"
+                        val dtstartStr = Regex("""DTSTART:(.+)""").find(bodyStr ?: "")?.groups?.get(1)?.value ?: ""
+                        val timeStart = if (dtstartStr.isNotEmpty()) convertLocalDateTimeStringToMillis(dtstartStr) else System.currentTimeMillis()
+
+                        AddLocalTasks(context, title, description, timeStart)
+
+                        Log.d("TASK", "Title: $title")
+                        Log.d("TASK", "Description: $description")
+                    }
+                }
+            })
+        }
+    }
+
+
+
+
+
+
+
+    fun fetchIcsEventSummaries(callback: (List<String>?) -> Unit) {
+        val name = UserPrefs.getUserName()
+        val pwd = UserPrefs.getPwd()
+
+        val request = Request.Builder()
+            .url(UserPrefs.getUrl())
+            .get()
+            .header("Authorization", Credentials.basic(name, pwd))
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("TASK", "Failed to fetch ICS content: ${e.message}")
+                callback(null)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    Log.e("TASK", "Failed to fetch ICS: ${response.code} ${response.message}")
+                    callback(null)
+                    return
+                }
+
+                val bodyStr = response.body?.string() ?: ""
+                Log.d("TASK", "ICS content received")
+
+                val summaries = bodyStr.lines()
+                    .map { it.trim() }
+                    .filter { it.startsWith("SUMMARY:") }
+                    .map { it.removePrefix("SUMMARY:") }
+
+                val dtstarts = bodyStr.lines()
+                    .map { it.trim() }
+                    .filter { it.startsWith("DTSTART:") }
+                    .map { it.removePrefix("DTSTART:") }
+
+                if (summaries.isNotEmpty() && dtstarts.isNotEmpty()) {
+                    // Комбінуємо summary + dtstart в окремі рядки
+                    val combined = summaries.zip(dtstarts) { summary, dtstart -> "$summary$dtstart" }
+                    callback(combined)  // Повертаємо нормальний список рядків
+                } else {
+                    callback(null)
+                }
+            }
+        })
+    }
+
 
 
 

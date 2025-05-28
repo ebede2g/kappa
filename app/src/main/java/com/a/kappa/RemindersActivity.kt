@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.CalendarContract
+import android.util.Log
 import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
@@ -12,40 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class RemindersActivity : AppCompatActivity() {
 
-
-    private var calendarId = UserPrefs.getID()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_reminders)
-
-        Toast.makeText(this, "id = $calendarId", Toast.LENGTH_SHORT).show()
-
-        // Відображення подій
-        refreshEvents()
-
-        val mainScreen = Intent(this, MainActivity::class.java)
-        val btnGoToMain = findViewById<Button>(R.id.goToMain)
-        btnGoToMain.setOnClickListener {
-            startActivity(mainScreen)
-            finish()
-        }
-
-        val btnDeleteAll = findViewById<Button>(R.id.btnDeleteAll)
-        btnDeleteAll.setOnClickListener {
-            val rowsDeleted = contentResolver.delete(
-                CalendarContract.Events.CONTENT_URI,
-                "${CalendarContract.Events.CALENDAR_ID} = ?",
-                arrayOf(calendarId.toString())
-            )
-            if (rowsDeleted > 0) {
-                Toast.makeText(this, "Видалено $rowsDeleted подій", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Події не знайдено або не видалено", Toast.LENGTH_SHORT).show()
-            }
-            refreshEvents()
-        }
-    }
 
     private fun refreshEvents() {
         val events = getEventsFromCalendar(this, calendarId)
@@ -84,4 +51,120 @@ class RemindersActivity : AppCompatActivity() {
 
         return events
     }
+
+
+    private var calendarId = UserPrefs.getID()
+
+
+
+
+    fun getLocalTaskNames(context: Context, calendarId: Long): List<String> {
+        val events = mutableListOf<String>()
+
+        val projection = arrayOf(
+            CalendarContract.Events.TITLE,
+            CalendarContract.Events.DTSTART
+        )
+
+        val selection = "${CalendarContract.Events.CALENDAR_ID} = ?"
+        val selectionArgs = arrayOf(calendarId.toString())
+
+        val cursor = context.contentResolver.query(
+            CalendarContract.Events.CONTENT_URI,
+            projection,
+            selection,
+            selectionArgs,
+            null
+        )
+
+        cursor?.use {
+            val titleIndex = it.getColumnIndex(CalendarContract.Events.TITLE)
+            val dtstartIndex = it.getColumnIndex(CalendarContract.Events.DTSTART)
+
+            while (it.moveToNext()) {
+                val title = it.getString(titleIndex) ?: "No title"
+                val dtstartMillis = it.getLong(dtstartIndex)
+                val dtstartStr = TaskUtil.convertMillisToLocalDateTimeString(dtstartMillis)
+                events.add(title+dtstartStr)
+            }
+        }
+
+        return events
+    }
+
+
+
+
+    fun syncClinetToServer(context: Context) {
+        Log.d("TASK", "початок обробки списків...")
+
+        val localEvents = getLocalTaskNames(context, UserPrefs.getID()).toSet()  // використовуємо Set для швидкого пошуку
+
+        TaskUtil.fetchIcsEventSummaries { remoteEventsList ->
+            if (remoteEventsList != null) {
+                val remoteEvents = remoteEventsList.toSet()
+
+                Log.d("TASK", "==== Local Events ====")
+                localEvents.forEach { Log.d("TASK", it) }
+
+                Log.d("TASK", "==== Remote Events ====")
+                remoteEvents.forEach { Log.d("TASK", it) }
+
+                // Знаходимо ті серверні події, яких немає локально
+                val missingEvents = remoteEvents.filter { it !in localEvents }
+
+                Log.d("TASK", "==== Отже, клієнту бракує... ====")
+                if (missingEvents.isEmpty()) {
+                    Log.d("TASK", "Бракує подій немає")
+                } else {
+                    TaskUtil.AddLocalTaskFromCalDavList(this, missingEvents)
+                    missingEvents.forEach { Log.d("TASK", it) }
+                }
+            } else {
+                Log.d("TASK", "Не вдалося отримати дані з CalDAV")
+            }
+        }
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_reminders)
+
+        Toast.makeText(this, "id = $calendarId", Toast.LENGTH_SHORT).show()
+
+        // Відображення подій
+        refreshEvents()
+
+        val mainScreen = Intent(this, MainActivity::class.java)
+        val btnGoToMain = findViewById<Button>(R.id.goToMain)
+        btnGoToMain.setOnClickListener {
+            startActivity(mainScreen)
+            finish()
+        }
+
+        val btnDeleteAll = findViewById<Button>(R.id.btnDeleteAll)
+        btnDeleteAll.setOnClickListener {
+            val rowsDeleted = contentResolver.delete(
+                CalendarContract.Events.CONTENT_URI,
+                "${CalendarContract.Events.CALENDAR_ID} = ?",
+                arrayOf(calendarId.toString())
+            )
+            if (rowsDeleted > 0) {
+                Toast.makeText(this, "Видалено $rowsDeleted подій", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Події не знайдено або не видалено", Toast.LENGTH_SHORT).show()
+            }
+            refreshEvents()
+        }
+
+
+        val btnSync = findViewById<Button>(R.id.sync)
+        btnSync.setOnClickListener{
+            syncClinetToServer(this)
+        }
+
+
+    }
+
 }
