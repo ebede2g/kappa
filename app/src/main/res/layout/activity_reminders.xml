@@ -18,7 +18,7 @@
         app:layout_constraintVertical_bias="0.593" />
 
     <Button
-        android:id="@+id/btnGoToMain"
+        android:id="@+id/goToMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="вернутись"
@@ -28,5 +28,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.101" />
+
+    <Button
+        android:id="@+id/btnDeleteAll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="видалити все"
+        app:layout_constraintBottom_toTopOf="@+id/reminderList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goToMain" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,4 @@
+<network-security-config>
+    <base-config cleartextTrafficPermitted="true" />
+    <!-- не бажано це дозволяяти, але на першйи випуск нехай буде-->
+</network-security-config>

@@ -48,24 +48,11 @@
         android:layout_marginTop="8dp"
         android:text="налаштунки"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
-        app:layout_constraintEnd_toStartOf="@+id/goToReminders"
-        app:layout_constraintHorizontal_bias="0.099"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />
-
-    <Button
-        android:id="@+id/goToReminders"
-        android:layout_width="99dp"
-        android:layout_height="52dp"
-        android:layout_marginEnd="24dp"
-        android:background="#19B2CA"
-        android:text="нагадування"
-        android:textColorLink="#0927DB"
-        app:layout_constraintBottom_toBottomOf="@+id/goToSettings"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/goToSettings"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.032" />
 
     <TextView
         android:id="@+id/status"
@@ -73,9 +60,17 @@
         android:layout_height="117dp"
         android:layout_marginTop="8dp"
         android:text="Статус"
-        app:layout_constraintEnd_toStartOf="@+id/goToReminders"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/goToSettings"
         app:layout_constraintTop_toBottomOf="@+id/goToSettings" />
+
+    <Button
+        android:id="@+id/goToReminders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="До нагадувань"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

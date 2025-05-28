@@ -81,22 +81,23 @@
         android:text="Зберегти та вийти"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.508"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.629" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:layout_constraintVertical_bias="0.057" />
 
     <TextView
         android:id="@+id/pp1"
-        android:layout_width="197dp"
-        android:layout_height="44dp"
+        android:layout_width="220dp"
+        android:layout_height="30dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
         app:layout_constraintTop_toBottomOf="@+id/btnGoToMain" />
 
     <TextView
         android:id="@+id/pp2"
-        android:layout_width="192dp"
-        android:layout_height="49dp"
+        android:layout_width="223dp"
+        android:layout_height="28dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="4dp"
         android:text="TextView"
@@ -105,8 +106,8 @@
 
     <TextView
         android:id="@+id/pp3"
-        android:layout_width="188dp"
-        android:layout_height="51dp"
+        android:layout_width="216dp"
+        android:layout_height="31dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
@@ -115,13 +116,23 @@
 
     <TextView
         android:id="@+id/pp4"
-        android:layout_width="188dp"
-        android:layout_height="51dp"
+        android:layout_width="216dp"
+        android:layout_height="34dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
         app:layout_constraintTop_toBottomOf="@+id/pp3" />
+
+    <TextView
+        android:id="@+id/pp5"
+        android:layout_width="217dp"
+        android:layout_height="34dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="token"
+        app:layout_constraintEnd_toEndOf="@+id/btnGoToMain"
+        app:layout_constraintTop_toBottomOf="@+id/pp4" />
 
     <Switch
         android:id="@+id/switchUseOffline"
