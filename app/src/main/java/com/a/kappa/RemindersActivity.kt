@@ -101,8 +101,9 @@ class RemindersActivity : AppCompatActivity() {
 
         val localEvents = getLocalTaskNames(context, UserPrefs.getID()).toSet()
 
-        TaskUtil.fetchIcsEventSummaries { remoteEventsList ->
-            if (remoteEventsList != null) {
+
+        TaskUtil.fetchIcsEventSummaries {
+            remoteEventsList -> if (remoteEventsList != null) {
                 val remoteEvents = remoteEventsList.toSet()
 
                 Log.d("TASK", "==== Local Events ====")
@@ -175,7 +176,8 @@ class RemindersActivity : AppCompatActivity() {
             btnSync.isEnabled = false
             Log.d("TASK", "Спроба синхронізації")
 
-            ChekUtil.isOnline(this) { online ->
+
+            ChekUtil.isCalDAVOnlineWithAuth() { online ->
                 if (online) {
                     Log.d("TASK", "все онлайн !")
 
@@ -188,12 +190,19 @@ class RemindersActivity : AppCompatActivity() {
                     }
 
                 } else {
-                    Log.d("TASK", "Не вдалося Sync з CalDAV")
-                    Toast.makeText(this, "Неможливо синхронізуватись. Не підключено сервер або ви сервер поза досяжністю", Toast.LENGTH_LONG).show()
-                    btnSync.isEnabled = true
+                    runOnUiThread {
+                        Log.d("TASK", "Не вдалося Sync з CalDAV")
+                        Toast.makeText(
+                            this,
+                            "Неможливо синхронізуватись. Не підключено сервер або ви сервер поза досяжністю",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        btnSync.isEnabled = true
+                    }
                 }
             }
         }
+
 
 
 

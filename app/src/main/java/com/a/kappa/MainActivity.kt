@@ -80,20 +80,20 @@ class MainActivity : AppCompatActivity() {
 
 
         btnAddTask.setOnClickListener{
-
-
-            val intervals = SpacedAlgorithm.twilin(6, 1.2).toMutableList()
-            intervals.add(0, LocalDateTime.now().plusMinutes(3))  // додати на початок Поточний час + 3 хвилини
+            val intervals = SpacedAlgorithm.twilin(6, 1.2)
+                .map { it.withSecond(0).withNano(0) }
+                .toMutableList()
+            intervals.add(0, LocalDateTime.now().plusMinutes(3).withSecond(0).withNano(0))
             intervals.forEach {
-                val t = it.toString()
-                Log.d("TASK", t)
+                Log.d("TASK", it.toString())
             }
+
 
 
             val title = taskTitle.text.toString()
             val descr = taskDescr.text.toString()
 
-            ChekUtil.isOnline(this) { online ->
+            ChekUtil.isObserverOnline(this) { online ->
                 if (online) {
                     intervals.forEach {
                         val millis = it.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()

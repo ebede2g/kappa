@@ -67,7 +67,7 @@ object TaskUtil {
         val name = UserPrefs.getUserName()
         val pwd = UserPrefs.getPwd()
 
-        val fileName = title+startDateTime+".ics"
+        val fileName = startDateTime+".ics"
         val fullUrl = "$url$fileName"
 
         Log.d("TASK_LOG", "Full URL: $fullUrl")
@@ -313,26 +313,17 @@ object TaskUtil {
                 val bodyStr = response.body?.string() ?: ""
                 Log.d("TASK", "ICS content received")
 
-                val summaries = bodyStr.lines()
-                    .map { it.trim() }
-                    .filter { it.startsWith("SUMMARY:") }
-                    .map { it.removePrefix("SUMMARY:") }
-
                 val dtstarts = bodyStr.lines()
-                    .map { it.trim() }
-                    .filter { it.startsWith("DTSTART:") }
-                    .map { it.removePrefix("DTSTART:") }
-
-                if (summaries.isNotEmpty() && dtstarts.isNotEmpty()) {
-                    // Комбінуємо summary + dtstart в окремі рядки
-                    val combined = summaries.zip(dtstarts) { summary, dtstart -> "$summary$dtstart" }
-                    callback(combined)  // Повертаємо нормальний список рядків
-                } else {
-                    callback(null)
-                }
+                    .filter { it.startsWith("UID:") }
+                    .map { line ->
+                        line.removePrefix("UID:")
+                            .removeSuffix(".ics")
+                    }
+                callback(if (dtstarts.isNotEmpty()) dtstarts else null)
             }
         })
     }
+
 
 
 
