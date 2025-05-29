@@ -225,40 +225,6 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun isCalDAVCredentialsValid(caldavUrl: String, userName: String, userPwd: String): Boolean {
-        if (caldavUrl.isBlank() || userName.isBlank() || userPwd.isBlank()) {
-            return false
-        }
-
-        val client = OkHttpClient()
-        val xmlBody = """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <d:propfind xmlns:d="DAV:">
-          <d:prop>
-            <d:current-user-principal />
-          </d:prop>
-        </d:propfind>
-        """.trimIndent()
-
-        val request = Request.Builder()
-            .url(caldavUrl)
-            .method("PROPFIND", RequestBody.create("application/xml".toMediaTypeOrNull(), xmlBody))
-            .header("Authorization", Credentials.basic(userName, userPwd))
-            .header("Depth", "0")
-            .build()
-
-        return try {
-            val response: Response = client.newCall(request).execute()
-            val isValid = response.isSuccessful || response.code == 207
-            response.close()
-            isValid
-        } catch (e: IOException) {
-            false
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun initializeCalendar() {
@@ -279,7 +245,7 @@ class SettingsActivity : AppCompatActivity() {
             return
         }
 
-        if (!isCalDAVCredentialsValid(url, userName, pwd)) {
+        if (!ChekUtil.isCalDAVCredentialsValid(url, userName, pwd)) {
             UserPrefs.setID(-1L)
             UserPrefs.setUID("")
             runOnUiThread {
@@ -370,7 +336,7 @@ class SettingsActivity : AppCompatActivity() {
             if (switchOffline.isChecked){
                 //оффлайн режим включено
                 UserPrefs.setStatus("Вітаю\n<Офлайн режим>\nВсе готово до роботи!")
-                val offlineCalName=applicationContext.applicationInfo.loadLabel(packageManager).toString()
+                val offlineCalName=applicationContext.applicationInfo.loadLabel(packageManager).toString()+"DAV_Offline"
                 val offlineCalId = getOrCreateCalendarId(this, offlineCalName)
                 UserPrefs.setIp("")
                 UserPrefs.setUserName("")

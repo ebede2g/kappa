@@ -3,12 +3,17 @@ package com.a.kappa
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.Credentials
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.Response
 import java.io.IOException
 
@@ -52,7 +57,7 @@ object ChekUtil {
 
 
 
-    fun isOnline(ctx: Context, callback: (Boolean) -> Unit) {
+    fun isObserverOnline(ctx: Context, callback: (Boolean) -> Unit) {
         if (!hasPermissionToCalendar(ctx)) {
             Log.d("TASK", "ERR  >> Дозвіл на календар не надано")
             callback(false)
@@ -89,6 +94,78 @@ object ChekUtil {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isCalDAVCredentialsValid(caldavUrl: String, userName: String, userPwd: String): Boolean {
+        if (caldavUrl.isBlank() || userName.isBlank() || userPwd.isBlank()) {
+            return false
+        }
+
+        val client = OkHttpClient()
+        val xmlBody = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <d:propfind xmlns:d="DAV:">
+          <d:prop>
+            <d:current-user-principal />
+          </d:prop>
+        </d:propfind>
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url(caldavUrl)
+            .method("PROPFIND", RequestBody.create("application/xml".toMediaTypeOrNull(), xmlBody))
+            .header("Authorization", Credentials.basic(userName, userPwd))
+            .header("Depth", "0")
+            .build()
+
+        return try {
+            val response: Response = client.newCall(request).execute()
+            val isValid = response.isSuccessful || response.code == 207
+            response.close()
+            isValid
+        } catch (e: IOException) {
+            false
+        } catch (e: IllegalArgumentException) {
+            false
+        }
+    }
+
+
+
+    fun isCalDAVOnlineWithAuth(callback: (Boolean) -> Unit) {
+        val url = UserPrefs.getUrl()
+        val username = UserPrefs.getUserName()
+        val password = UserPrefs.getPwd()
+
+        val credential = Credentials.basic(username, password)
+
+        val request = Request.Builder()
+            .url(url)
+            .method("OPTIONS", null)
+            .header("Authorization", credential)
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                callback(false)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val online = response.isSuccessful
+                response.close()
+                callback(online)
+            }
+        })
+    }
 
 
 }
