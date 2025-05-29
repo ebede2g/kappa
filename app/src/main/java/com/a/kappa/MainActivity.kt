@@ -27,6 +27,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.Instant
 import java.time.ZoneId
+import java.time.ZoneOffset
 
 
 class MainActivity : AppCompatActivity() {
@@ -76,27 +77,35 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+
+
         btnAddTask.setOnClickListener{
 
-            Log.d("TASK", SpacedAlgorithm.twilin(6, 1.2).toString())
+            val intervals = SpacedAlgorithm.twilin(6, 1.2)
+            intervals.forEach {
+                val t = it.toString()
+                Log.d("TASK", t)
+            }
 
-
-            val startMillis = System.currentTimeMillis() + 2 * 60 * 60 * 1000
             val title = taskTitle.text.toString()
             val descr = taskDescr.text.toString()
 
             ChekUtil.isOnline(this) { online ->
                 if (online) {
-                    TaskUtil.AddServerTask(title, descr, startMillis)
+                    intervals.forEach {
+                        val millis = it.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        TaskUtil.AddServerTask(title, descr, millis)
+                    }
                 } else {
-                    TaskUtil.AddLocalTasks(this, title, descr, startMillis)
+                    intervals.forEach {
+                        val millis = it.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                        TaskUtil.AddLocalTasks(this, title, descr, millis)
+                    }
                 }
             }
 
             taskTitle.setText("")
             taskDescr.setText("")
-
-
         }
 
         val btnGoToReminders = findViewById<Button>(R.id.goToReminders)

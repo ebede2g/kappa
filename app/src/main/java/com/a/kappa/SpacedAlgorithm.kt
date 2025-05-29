@@ -11,21 +11,23 @@ object SpacedAlgorithm {
     private const val RD = 24 - WD    // Неробочі години на день
     private val KOEF = 24.0 / WD      // Коефіцієнт розтягування часу
 
-    // Генерація списку дат від sp до ep
-    private fun gdl(sp: LocalDateTime, ep: LocalDateTime): List<LocalDateTime> {
+    // Генерація списку кінців робочих днів від sp до ep +3 дні
+    fun gdl(sp: LocalDateTime, ep: LocalDateTime): List<LocalDateTime> {
         val days = mutableListOf<LocalDateTime>()
         var currentDay = sp
         val limitEp = ep.plusDays(3)
+
         while (currentDay.isBefore(limitEp)) {
             val endOfDay = currentDay.withHour(WEH).withMinute(0).withSecond(0).withNano(0)
             days.add(endOfDay)
             currentDay = currentDay.plusDays(1)
         }
+
         return days
     }
 
-    // Коригування дат до робочих годин
-    private fun atwh(dtArr: List<LocalDateTime>): List<LocalDateTime> {
+    // Коригування списку дат до робочих годин
+    fun atwh(dtArr: List<LocalDateTime>): List<LocalDateTime> {
         if (dtArr.isEmpty()) return emptyList()
 
         var opDtArr = dtArr.toMutableList()
@@ -37,12 +39,7 @@ object SpacedAlgorithm {
                 nextMorning = nextMorning.plusDays(1)
             }
             val hoursToAdd = Duration.between(sp, nextMorning)
-
-            val tempOpDtArr = mutableListOf<LocalDateTime>()
-            for (dt in opDtArr) {
-                tempOpDtArr.add(dt.plus(hoursToAdd))
-            }
-            opDtArr = tempOpDtArr
+            opDtArr = opDtArr.map { it.plus(hoursToAdd) }.toMutableList()
             sp = opDtArr.first()
         }
 
@@ -65,15 +62,17 @@ object SpacedAlgorithm {
             opDtArr = nextTempDtArr
             if (opDtArr.isEmpty()) break
         }
-        ans.addAll(opDtArr)
 
+        ans.addAll(opDtArr)
         return ans
     }
 
-    // Генерація майбутніх дат і часу
-    private fun gfdt2(n: Int, t: Double): List<LocalDateTime> {
+    // Генерація майбутніх дат і часу з логарифмічною логікою
+    fun gfdt2(n: Int, t: Double): List<LocalDateTime> {
+        val now = LocalDateTime.now()
+
         if (n <= 1 && t / KOEF != 1.0) {
-            return listOf(LocalDateTime.now().plusMinutes(30))
+            return listOf(now.plusMinutes(30))
         }
 
         val j = if (n - 1 == 0) {
@@ -82,35 +81,37 @@ object SpacedAlgorithm {
             (t / KOEF).pow(1.0 / (n - 1))
         }
 
-        val now = LocalDateTime.now()
+        if (j.isNaN()) {
+            return listOf(now.plusMinutes(30))
+        }
+
         val dtArr = mutableListOf<LocalDateTime>()
 
-        if (j.isNaN()) {
-            dtArr.add(now.plusMinutes(30))
-            return dtArr
-        }
-
-        if (kotlin.math.abs(j - 1.0) < 0.000001) {
-            for (i in 0 until 30) {
-                val daysInNanos = ((i / KOEF) * 24 * 60 * 60 * 1_000_000_000L).toLong()
-                val durationFromDays = Duration.ofNanos(daysInNanos)
-                val ft = now.plus(durationFromDays).plusMinutes(30)
-                dtArr.add(ft)
-            }
-        } else if (j > 1.0) {
-            val jH = j.pow(1.0 / (24 * 60))
-            for (i in 0 until (n * 24 * 60)) {
-                if (i % (24 * 60) == 0) {
-                    val unitDays = jH.pow(i.toDouble())
-                    val totalMinutesOffset = 30.0 + unitDays * 24.0 * 60.0 - 1440.0
-                    val td = Duration.ofMinutes(totalMinutesOffset.toLong())
-                    val ft = now.plus(td)
-                    dtArr.add(ft)
+        when {
+            kotlin.math.abs(j - 1.0) < 0.000001 -> {
+                // Кейс j близький до 1 - рівномірне додавання з інтервалом
+                for (i in 0 until n) {
+                    val offsetMinutes = ((i / KOEF) * 24 * 60).toLong()
+                    dtArr.add(now.plusMinutes(offsetMinutes + 30))
                 }
             }
-        } else {
-            dtArr.add(now.plusMinutes(30))
+            j > 1.0 -> {
+                // j більше 1 — експоненційне збільшення інтервалів
+                for (i in 0 until n) {
+                    val totalDays = (j.pow(i.toDouble()) - 1) / (j - 1)
+                    val totalMinutesOffset = totalDays * 24.0 * 60.0
+                    dtArr.add(now.plusMinutes(totalMinutesOffset.toLong() + 30))
+                }
+            }
+            else -> {
+                // Обробка j < 1 — зменшення інтервалів, але не менше 30 хв
+                for (i in 0 until n) {
+                    val interval = ((1.0 - j.pow(i.toDouble())) / (1.0 - j)) * 24.0 * 60.0
+                    dtArr.add(now.plusMinutes(interval.toLong() + 30))
+                }
+            }
         }
+
         return dtArr
     }
 

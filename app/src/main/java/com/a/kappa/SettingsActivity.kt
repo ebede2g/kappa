@@ -348,11 +348,11 @@ class SettingsActivity : AppCompatActivity() {
 
 
         findViewById<TextView>(R.id.status).text = UserPrefs.getStatus()
-        findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
-        findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
-        findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-        findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-        findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
+        //findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
+        //findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
+        //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+        //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+        //findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
 
 
         switchOffline.setOnCheckedChangeListener { _, isChecked ->

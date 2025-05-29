@@ -17,6 +17,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.atomic.AtomicInteger
 
 object TaskUtil {
 
@@ -199,21 +200,22 @@ object TaskUtil {
 
 
     //шукає на серері список тасків та скачує його в локлаьний календар
-    fun AddLocalTaskFromCalDavList(context: Context, listOfIcsFilesToGet: List<String>, onFinished: () -> Unit) {
+    fun AddLocalTaskFromCalDavList(
+        context: Context,
+        listOfIcsFilesToGet: List<String>,
+        onComplete: () -> Unit
+    ) {
         val urlBase = UserPrefs.getUrl().trimEnd('/')
         val name = UserPrefs.getUserName()
         val pwd = UserPrefs.getPwd()
 
         if (listOfIcsFilesToGet.isEmpty()) {
-            onFinished()  // Якщо немає файлів, відразу викликаємо onFinished
+            onComplete()
             return
         }
 
-        var completedRequests = 0
-        val totalRequests = listOfIcsFilesToGet.size
-
-        // синхронізація для роботи з completedRequests
-        val lock = Any()
+        val total = listOfIcsFilesToGet.size
+        val completed = AtomicInteger(0)
 
         for (fileName in listOfIcsFilesToGet) {
             val fileUrl = "$urlBase/$fileName.ics"
@@ -228,16 +230,17 @@ object TaskUtil {
             OkHttpClient().newCall(request).enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
                     Log.e("TASK", "Failed to get $fileName: ${e.message}")
-                    checkIfAllCompleted()
+                    checkIfAllDone()
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         if (!response.isSuccessful) {
                             Log.e("TASK", "Failed to get $fileName: ${response.code} ${response.message}")
-                            checkIfAllCompleted()
+                            checkIfAllDone()
                             return
                         }
+
                         val bodyStr = response.body?.string()
                         Log.d("TASK", "File $fileName content received")
 
@@ -250,24 +253,18 @@ object TaskUtil {
 
                         Log.d("TASK", "Title: $title")
                         Log.d("TASK", "Description: $description")
-
-                        checkIfAllCompleted()
                     }
+                    checkIfAllDone()
                 }
 
-                private fun checkIfAllCompleted() {
-                    synchronized(lock) {
-                        completedRequests++
-                        if (completedRequests == totalRequests) {
-                            onFinished()
-                        }
+                fun checkIfAllDone() {
+                    if (completed.incrementAndGet() == total) {
+                        onComplete()
                     }
                 }
             })
         }
     }
-
-
 
 
 

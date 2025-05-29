@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import android.app.AlertDialog
 
 class RemindersActivity : AppCompatActivity() {
 
@@ -95,10 +96,10 @@ class RemindersActivity : AppCompatActivity() {
 
 
 
-    fun syncClinetToServer(context: Context) {
+    fun syncClinetToServer(context: Context, onDone: () -> Unit) {
         Log.d("TASK", "початок обробки списків...")
 
-        val localEvents = getLocalTaskNames(context, UserPrefs.getID()).toSet()  // використовуємо Set для швидкого пошуку
+        val localEvents = getLocalTaskNames(context, UserPrefs.getID()).toSet()
 
         TaskUtil.fetchIcsEventSummaries { remoteEventsList ->
             if (remoteEventsList != null) {
@@ -110,26 +111,27 @@ class RemindersActivity : AppCompatActivity() {
                 Log.d("TASK", "==== Remote Events ====")
                 remoteEvents.forEach { Log.d("TASK", it) }
 
-                // Знаходимо ті серверні події, яких немає локально
                 val missingEvents = remoteEvents.filter { it !in localEvents }
 
                 Log.d("TASK", "==== Отже, клієнту бракує... ====")
                 if (missingEvents.isEmpty()) {
                     Log.d("TASK", "Бракує подій немає")
+                    onDone()
                 } else {
                     missingEvents.forEach { Log.d("TASK", it) }
-                    TaskUtil.AddLocalTaskFromCalDavList(this, missingEvents){
-                        //очікує поки виконає
-                        runOnUiThread {
-                            refreshEvents()
-                        }
+                    TaskUtil.AddLocalTaskFromCalDavList(context, missingEvents) {
+                        // після додавання задач
+                        onDone()
                     }
                 }
             } else {
                 Log.d("TASK", "Не вдалося отримати дані з CalDAV")
+                onDone()
             }
         }
     }
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -164,17 +166,35 @@ class RemindersActivity : AppCompatActivity() {
         }
 
 
-        val btnSync = findViewById<Button>(R.id.sync)
-        btnSync.setOnClickListener{
+        val btnSync = findViewById<Button>(R.id.btnToSync)
+        if (UserPrefs.getIs_offline() || UserPrefs.getUID()==""){
+            btnSync.isEnabled = false
+        }
+
+        btnSync.setOnClickListener {
+            btnSync.isEnabled = false
+            Log.d("TASK", "Спроба синхронізації")
+
             ChekUtil.isOnline(this) { online ->
                 if (online) {
-                    syncClinetToServer(this)
-                    //refreshEvents()
+                    Log.d("TASK", "все онлайн !")
+
+                    syncClinetToServer(this) {
+                        runOnUiThread {
+                            refreshEvents()
+                            Log.d("TASK", "синхронізовано! ок.")
+                            btnSync.isEnabled = true
+                        }
+                    }
+
                 } else {
+                    Log.d("TASK", "Не вдалося Sync з CalDAV")
                     Toast.makeText(this, "Неможливо синхронізуватись. Не підключено сервер або ви сервер поза досяжністю", Toast.LENGTH_LONG).show()
+                    btnSync.isEnabled = true
                 }
             }
         }
+
 
 
     }
