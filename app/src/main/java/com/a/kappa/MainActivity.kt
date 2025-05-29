@@ -81,11 +81,14 @@ class MainActivity : AppCompatActivity() {
 
         btnAddTask.setOnClickListener{
 
-            val intervals = SpacedAlgorithm.twilin(6, 1.2)
+
+            val intervals = SpacedAlgorithm.twilin(6, 1.2).toMutableList()
+            intervals.add(0, LocalDateTime.now().plusMinutes(3))  // додати на початок Поточний час + 3 хвилини
             intervals.forEach {
                 val t = it.toString()
                 Log.d("TASK", t)
             }
+
 
             val title = taskTitle.text.toString()
             val descr = taskDescr.text.toString()

@@ -1,5 +1,6 @@
 package com.a.kappa
 
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.provider.CalendarContract
@@ -113,6 +114,8 @@ object TaskUtil {
         })
     }
 
+
+
     fun AddLocalTasks(context: Context, title: String, description: String, startMillis: Long) {
         Log.d("TASK","----AddLocalTasks----")
 
@@ -139,8 +142,21 @@ object TaskUtil {
 
         if (uri != null) {
             Log.d("TASK", "Подію додано: $uri")
-        } else {
-            Log.e("TASK", "Помилка додавання події")
+
+            val eventId = ContentUris.parseId(uri)  // отримаємо ID щойно створеної події
+
+            val reminderValues = ContentValues().apply {
+                put(CalendarContract.Reminders.EVENT_ID, eventId)
+                put(CalendarContract.Reminders.MINUTES, 0) // зодразу нагадування створити
+                put(CalendarContract.Reminders.METHOD, CalendarContract.Reminders.METHOD_ALERT)
+            }
+
+            val reminderUri = context.contentResolver.insert(CalendarContract.Reminders.CONTENT_URI, reminderValues)
+            if (reminderUri != null) {
+                Log.d("TASK", "Нагадування створено: $reminderUri")
+            } else {
+                Log.e("TASK", "Не вдалося створити нагадування")
+            }
         }
     }
 
