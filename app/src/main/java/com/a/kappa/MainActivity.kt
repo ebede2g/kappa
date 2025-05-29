@@ -19,6 +19,9 @@ import android.content.ContentValues
 import android.content.Context
 
 import android.provider.CalendarContract
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -44,10 +47,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequestCalendarPermission(this, PERMISSION_REQUEST_CODE)
@@ -61,11 +60,30 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
 
+
+
+        val taskTitle = findViewById<EditText>(R.id.taskTitle)
+        val taskDescr = findViewById<EditText>(R.id.taskDesc)
         val btnAddTask = findViewById<Button>(R.id.btnAddTask)
+
+        btnAddTask.isEnabled = false
+        taskTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // Вмикаємо кнопку, якщо введено 2 або більше символів
+                btnAddTask.isEnabled = (s?.length ?: 0) >= 2
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
         btnAddTask.setOnClickListener{
+
+            Log.d("TASK", SpacedAlgorithm.twilin(6, 1.2).toString())
+
+
             val startMillis = System.currentTimeMillis() + 2 * 60 * 60 * 1000
-            val title = "titlee"
-            val descr = "descrr"
+            val title = taskTitle.text.toString()
+            val descr = taskDescr.text.toString()
 
             ChekUtil.isOnline(this) { online ->
                 if (online) {
@@ -74,6 +92,10 @@ class MainActivity : AppCompatActivity() {
                     TaskUtil.AddLocalTasks(this, title, descr, startMillis)
                 }
             }
+
+            taskTitle.setText("")
+            taskDescr.setText("")
+
 
         }
 
