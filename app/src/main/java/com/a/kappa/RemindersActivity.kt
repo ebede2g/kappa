@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import android.app.AlertDialog
 
 class RemindersActivity : AppCompatActivity() {
 

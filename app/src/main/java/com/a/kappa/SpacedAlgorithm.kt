@@ -2,7 +2,6 @@ package com.a.kappa
 
 import java.time.LocalDateTime
 import java.time.Duration
-import kotlin.math.pow
 
 object SpacedAlgorithm {
     fun twilin(n: Int, j: Double): List<LocalDateTime> {

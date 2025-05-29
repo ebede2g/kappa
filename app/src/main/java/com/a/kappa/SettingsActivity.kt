@@ -19,16 +19,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.messaging.FirebaseMessaging
-import okhttp3.Credentials
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody
 import okhttp3.Response
 import okhttp3.*
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
 
 import java.io.IOException
 import kotlin.concurrent.thread
@@ -36,48 +32,7 @@ import kotlin.concurrent.thread
 class SettingsActivity : AppCompatActivity() {
     private val CALENDAR_PERMISSION_REQUEST_CODE = 101
 
-    fun fetchAndSendFcmToken(onTokenReady: (String) -> Unit) {
-        Log.d("TASK", "запитую токен")
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w("TASK", "Fetching FCM registration token failed", task.exception)
-                onTokenReady("-") // або можна нічого не робити
-                return@addOnCompleteListener
-            }
-
-            val token = task.result
-            Log.d("TASK", "FCM Token: $token")
-
-            val client = OkHttpClient()
-            val json = """
-        {
-          "fcm_token": "$token"
-        }
-    """.trimIndent()
-
-            val body = json.toRequestBody("application/json".toMediaType())
-            val request = Request.Builder()
-                .url("http://5.58.30.179:5000/register_token")
-                .post(body)
-                .build()
-
-            client.newCall(request).enqueue(object : Callback {
-                override fun onFailure(call: Call, e: IOException) {
-                    Log.e("TASK", "Failed to send token to server", e)
-                }
-
-                override fun onResponse(call: Call, response: Response) {
-                    Log.d("TASK", "Token sent to server successfully")
-                    response.close()
-                }
-            })
-
-            // Повертаємо токен через callback
-            onTokenReady(token)
-        }
-    }
-
-        fun fetchAndSendFcmToken() {
+    fun fetchAndSendFcmToken() {
         var token = ""
         Log.d("TASK", "запитую токен")
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
@@ -100,7 +55,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val body = json.toRequestBody("application/json".toMediaType())
             val request = Request.Builder()
-                .url("http://5.58.30.179:5000/register_token") // твій серверний ендпоінт
+                .url("http://"+ UserPrefs.getIp()+":5000/register_token") // твій серверний ендпоінт
                 .post(body)
                 .build()
 
@@ -314,11 +269,11 @@ class SettingsActivity : AppCompatActivity() {
 
 
         findViewById<TextView>(R.id.status).text = UserPrefs.getStatus()
-        //findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
-        //findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
-        //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-        //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-        //findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
+        findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
+        findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
+        findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+        findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+        findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
 
 
         switchOffline.setOnCheckedChangeListener { _, isChecked ->

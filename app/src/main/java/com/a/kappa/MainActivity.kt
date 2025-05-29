@@ -1,6 +1,5 @@
 package com.a.kappa
 
-import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,25 +8,12 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.a.kappa.PermissionHelper.checkAndRequestCalendarPermission
-import okhttp3.*
-import java.io.IOException
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import android.content.ContentValues
-import android.content.Context
-
-import android.provider.CalendarContract
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.RequestBody.Companion.toRequestBody
-import java.time.Instant
 import java.time.ZoneId
-import java.time.ZoneOffset
 
 
 class MainActivity : AppCompatActivity() {

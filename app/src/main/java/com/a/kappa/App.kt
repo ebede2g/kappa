@@ -5,7 +5,6 @@ package com.a.kappa
 import android.content.Context
 import android.content.SharedPreferences
 import android.app.Application
-import java.util.Calendar
 
 
 class App : Application() {
@@ -87,19 +86,4 @@ object UserPrefs {
         prefs.edit().putString(Status, a).apply()
     }
 
-
-
-
-
-
-
-
-
-    fun save(url: String, pwd: String, nam: String) {
-        prefs.edit()
-            .putString(CAlDAV_URL, url)
-            .putString(CAlDAV_PWD, pwd)
-            .putString(Calendar_UserName, nam)
-            .apply()
-    }
 }

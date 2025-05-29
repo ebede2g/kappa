@@ -28,13 +28,13 @@ object ChekUtil {
 
     fun isServerOnline(onResult: (Boolean) -> Unit) {
         val client = OkHttpClient.Builder()
-            .connectTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
-            .readTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
-            .writeTimeout(8, java.util.concurrent.TimeUnit.SECONDS)
+            .connectTimeout(4, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(4, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(4, java.util.concurrent.TimeUnit.SECONDS)
             .build()
 
         val request = Request.Builder()
-            .url("http://5.58.30.179:5000/ping")
+            .url("http://"+UserPrefs.getIp()+":5000/ping")
             .get()
             .build()
 
