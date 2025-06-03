@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUEST_CODE = 1001
 
     private lateinit var statusText: TextView
+    private lateinit var btnGoToReminders: Button
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -38,10 +39,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         checkAndRequestCalendarPermission(this, PERMISSION_REQUEST_CODE)
         setContentView(R.layout.activity_main)
-        supportActionBar?.hide()
 
+        val taskTitle = findViewById<EditText>(R.id.taskTitle)
+        val taskDescr = findViewById<EditText>(R.id.taskDesc)
+        val btnAddTask = findViewById<Button>(R.id.btnAddTask)
+
+        btnGoToReminders = findViewById<Button>(R.id.goToReminders)
+
+
+        var calPerm = ChekUtil.hasPermissionToCalendar(this)
         statusText = findViewById(R.id.status)
-        statusText.setText(if (ChekUtil.hasPermissionToCalendar(this)) UserPrefs.getStatus() else UserPrefs.getStatus()+"\n> Надайте дозвіл на викорсиатння календаря")
+        statusText.setText(if (calPerm) UserPrefs.getStatus() else UserPrefs.getStatus()+"\n> Надайте дозвіл на викорсиатння календаря")
+        btnGoToReminders.isEnabled=calPerm
 
         findViewById<Button>(R.id.goToSettings).setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
@@ -49,9 +58,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val taskTitle = findViewById<EditText>(R.id.taskTitle)
-        val taskDescr = findViewById<EditText>(R.id.taskDesc)
-        val btnAddTask = findViewById<Button>(R.id.btnAddTask)
+
 
         btnAddTask.isEnabled = false
         taskTitle.addTextChangedListener(object : TextWatcher {
@@ -97,10 +104,18 @@ class MainActivity : AppCompatActivity() {
             taskDescr.setText("")
         }
 
-        val btnGoToReminders = findViewById<Button>(R.id.goToReminders)
+
+
         btnGoToReminders.setOnClickListener{
             startActivity(Intent(this,RemindersActivity::class.java))
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        var calPerm = ChekUtil.hasPermissionToCalendar(this)
+        statusText.setText(if (calPerm) UserPrefs.getStatus() else UserPrefs.getStatus()+"\n> Надайте дозвіл на викорсиатння календаря")
+        btnGoToReminders.isEnabled=calPerm
     }
 }

@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hasPermissionToCalendar" />
+
     <ListView
         android:id="@+id/reminderList"
         android:layout_width="313dp"
@@ -46,5 +52,15 @@
         app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toEndOf="@+id/goToMain"
         app:layout_constraintTop_toBottomOf="@+id/goToMain" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Локально"
+        app:layout_constraintEnd_toEndOf="@+id/btnDeleteAll"
+        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintStart_toStartOf="@+id/btnDeleteAll"
+        app:layout_constraintTop_toBottomOf="@+id/btnDeleteAll" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

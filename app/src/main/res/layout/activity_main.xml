@@ -11,11 +11,11 @@
         android:id="@+id/btnAddTask"
         android:layout_width="124dp"
         android:layout_height="119dp"
-        android:layout_marginBottom="116dp"
+        android:layout_marginBottom="104dp"
         android:text="ПУШ"
         app:layout_constraintBottom_toTopOf="@+id/taskDesc"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.108"
+        app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -36,23 +36,23 @@
         android:hint="Task Description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.386"
+        app:layout_constraintHorizontal_bias="0.385"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.812" />
+        app:layout_constraintVertical_bias="0.745" />
 
     <Button
         android:id="@+id/goToSettings"
-        android:layout_width="95dp"
-        android:layout_height="63dp"
+        android:layout_width="123dp"
+        android:layout_height="47dp"
         android:layout_marginTop="8dp"
         android:text="налаштунки"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.032" />
+        app:layout_constraintVertical_bias="0.034" />
 
     <TextView
         android:id="@+id/status"
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:text="До нагадувань"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
