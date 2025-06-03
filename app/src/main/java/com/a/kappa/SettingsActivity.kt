@@ -194,8 +194,8 @@ class SettingsActivity : AppCompatActivity() {
                 UserPrefs.setStatus("Севрер не знайдено\nПоля порожні")
                 Toast.makeText(this, "URL, ім'я користувача або пароль не заповнені. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
                 UserPrefs.setToken("-")
-                findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-                findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
             }
             return
         }
@@ -207,8 +207,8 @@ class SettingsActivity : AppCompatActivity() {
                 UserPrefs.setStatus("Севрер не знайдено\n--------\nCalDAV: \nхибний URL і/або пароль")
                 Toast.makeText(this, "CalDAV: невірна URL, ім'я користувача або пароль. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
                 UserPrefs.setToken("-")
-                findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-                findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
             }
             return
         }
@@ -226,7 +226,7 @@ class SettingsActivity : AppCompatActivity() {
             UserPrefs.setID(-1L)
             runOnUiThread {
                 Toast.makeText(this, "Не вказано ім'я для створення локального календаря (UID). ID календаря скинуто.", Toast.LENGTH_LONG).show()
-                findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
                 UserPrefs.setToken("-")
             }
             return
@@ -237,13 +237,13 @@ class SettingsActivity : AppCompatActivity() {
         if (typeLongID != null) {
             UserPrefs.setID(typeLongID)
             runOnUiThread {
-                findViewById<TextView>(R.id.pp4).text = typeLongID.toString()
+                //findViewById<TextView>(R.id.pp4).text = typeLongID.toString()
                 Toast.makeText(this, "ID календаря ($typeLongID) для '$calendarNameToCreate' збережено.", Toast.LENGTH_SHORT).show()
             }
         } else {
             UserPrefs.setID(-1L)
             runOnUiThread {
-                findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
                 Toast.makeText(this, "Помилка: не вдалося створити/знайти календар '$calendarNameToCreate'. ID скинуто.", Toast.LENGTH_LONG).show()
             }
         }
@@ -269,11 +269,11 @@ class SettingsActivity : AppCompatActivity() {
 
 
         findViewById<TextView>(R.id.status).text = UserPrefs.getStatus()
-        findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
-        findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
-        findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-        findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-        findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
+        //findViewById<TextView>(R.id.pp1).text = UserPrefs.getIp()
+        //findViewById<TextView>(R.id.pp2).text = UserPrefs.getUserName()
+        //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+        //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+        //findViewById<TextView>(R.id.pp5).text = UserPrefs.getToken()
 
 
         switchOffline.setOnCheckedChangeListener { _, isChecked ->
