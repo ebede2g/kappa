@@ -24,12 +24,12 @@ class MainActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (!grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }){
-                Toast.makeText(this, "Надайте дозвіл на викорсиатння календаря", Toast.LENGTH_LONG).show()
-            }
-            else{
+            if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 Toast.makeText(this, "Дозвіл надано!", Toast.LENGTH_LONG).show()
-                statusText.setText( UserPrefs.getStatus())
+                statusText.setText(UserPrefs.getStatus())
+            } else {
+                Toast.makeText(this, "Надайте дозвіл на використання календаря", Toast.LENGTH_LONG).show()
+                statusText.setText(UserPrefs.getStatus() + "\n> Надайте дозвіл на використання календаря")
             }
         }
     }
