@@ -74,9 +74,9 @@ class MainActivity : AppCompatActivity() {
 
         btnAddTask.setOnClickListener{
             val intervals = SpacedAlgorithm.twilin(6, 1.2)
-                .map { it.withSecond(0).withNano(0) }
+                .map { it.withNano(0) }
                 .toMutableList()
-            intervals.add(0, LocalDateTime.now().plusMinutes(3).withSecond(0).withNano(0))
+            //intervals.add(0, LocalDateTime.now().plusMinutes(3).withSecond(0).withNano(0))
             intervals.forEach {
                 Log.d("TASK", it.toString())
             }

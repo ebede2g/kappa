@@ -32,7 +32,81 @@ import kotlin.concurrent.thread
 class SettingsActivity : AppCompatActivity() {
     private val CALENDAR_PERMISSION_REQUEST_CODE = 101
 
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initializeCalendar() {
+        val url = UserPrefs.getUrl()
+        val userName = UserPrefs.getUserName()
+        val pwd = UserPrefs.getPwd()
+
+        if (url.isBlank() || userName.isBlank() || pwd.isBlank()) {
+            UserPrefs.setID(-1L)
+            UserPrefs.setUID("")
+            runOnUiThread {
+                UserPrefs.setStatus("Севрер не знайдено\nПоля порожні")
+                Toast.makeText(this, "URL, ім'я користувача або пароль не заповнені. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
+                UserPrefs.setToken("-")
+                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+            }
+            return
+        }
+
+        if (!ChekUtil.isCalDAVCredentialsValid(url, userName, pwd)) {
+            UserPrefs.setID(-1L)
+            UserPrefs.setUID("")
+            runOnUiThread {
+                UserPrefs.setStatus("Севрер не знайдено\n--------\nCalDAV: \nхибний URL і/або пароль")
+                Toast.makeText(this, "CalDAV: невірна URL, ім'я користувача або пароль. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
+                UserPrefs.setToken("-")
+                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+            }
+            return
+        }
+
+        runOnUiThread {
+            UserPrefs.setStatus("Вітаю\n<Онлайн режим>\nВсе готово до роботи!")
+            Toast.makeText(this, "CalDAV: URL та облікові дані правильні.", Toast.LENGTH_SHORT).show()
+            fetchAndSendFcmToken()
+            //Запит токену FCM , draw it onto UserPrefs.setToken()
+        }
+
+        val calendarNameToCreate = UserPrefs.getUID()
+
+        if (calendarNameToCreate.isNullOrBlank()) {
+            UserPrefs.setID(-1L)
+            runOnUiThread {
+                Toast.makeText(this, "Не вказано ім'я для створення локального календаря (UID). ID календаря скинуто.", Toast.LENGTH_LONG).show()
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                UserPrefs.setToken("-")
+            }
+            return
+        }
+
+        val typeLongID = getOrCreateCalendarId(this, calendarNameToCreate)
+
+        if (typeLongID != null) {
+            UserPrefs.setID(typeLongID)
+            runOnUiThread {
+                //findViewById<TextView>(R.id.pp4).text = typeLongID.toString()
+                Toast.makeText(this, "ID календаря ($typeLongID) для '$calendarNameToCreate' збережено.", Toast.LENGTH_SHORT).show()
+            }
+        } else {
+            UserPrefs.setID(-1L)
+            runOnUiThread {
+                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
+                Toast.makeText(this, "Помилка: не вдалося створити/знайти календар '$calendarNameToCreate'. ID скинуто.", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+
+
     fun fetchAndSendFcmToken() {
+        var userName = UserPrefs.getUserName()
+        var calUID = UserPrefs.getUID()
         var token = ""
         Log.d("TASK", "запитую токен")
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
@@ -49,13 +123,16 @@ class SettingsActivity : AppCompatActivity() {
             val client = OkHttpClient()
             val json = """
             {
-              "fcm_token": "$token"
+              "fcm_token": "$token",
+              "calendar_id": "$userName/$calUID"
             }
-        """.trimIndent()
+            """.trimIndent()
+
+
 
             val body = json.toRequestBody("application/json".toMediaType())
             val request = Request.Builder()
-                .url("http://"+ UserPrefs.getIp()+":5000/register_token") // твій серверний ендпоінт
+                .url("http://"+ UserPrefs.getIp()+":5000/register_token")
                 .post(body)
                 .build()
 
@@ -71,6 +148,38 @@ class SettingsActivity : AppCompatActivity() {
         }
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     fun normalizeUrl(rawUrl: String): List<String> {
         var url = rawUrl.trim()
@@ -182,74 +291,6 @@ class SettingsActivity : AppCompatActivity() {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun initializeCalendar() {
-        val url = UserPrefs.getUrl()
-        val userName = UserPrefs.getUserName()
-        val pwd = UserPrefs.getPwd()
-
-        if (url.isBlank() || userName.isBlank() || pwd.isBlank()) {
-            UserPrefs.setID(-1L)
-            UserPrefs.setUID("")
-            runOnUiThread {
-                UserPrefs.setStatus("Севрер не знайдено\nПоля порожні")
-                Toast.makeText(this, "URL, ім'я користувача або пароль не заповнені. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
-                UserPrefs.setToken("-")
-                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-            }
-            return
-        }
-
-        if (!ChekUtil.isCalDAVCredentialsValid(url, userName, pwd)) {
-            UserPrefs.setID(-1L)
-            UserPrefs.setUID("")
-            runOnUiThread {
-                UserPrefs.setStatus("Севрер не знайдено\n--------\nCalDAV: \nхибний URL і/або пароль")
-                Toast.makeText(this, "CalDAV: невірна URL, ім'я користувача або пароль. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
-                UserPrefs.setToken("-")
-                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-            }
-            return
-        }
-
-        runOnUiThread {
-            UserPrefs.setStatus("Вітаю\n<Онлайн режим>\nВсе готово до роботи!")
-            Toast.makeText(this, "CalDAV: URL та облікові дані правильні.", Toast.LENGTH_SHORT).show()
-            fetchAndSendFcmToken()
-            //Запит токену FCM , draw it onto UserPrefs.setToken()
-        }
-
-        val calendarNameToCreate = UserPrefs.getUID()
-
-        if (calendarNameToCreate.isNullOrBlank()) {
-            UserPrefs.setID(-1L)
-            runOnUiThread {
-                Toast.makeText(this, "Не вказано ім'я для створення локального календаря (UID). ID календаря скинуто.", Toast.LENGTH_LONG).show()
-                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-                UserPrefs.setToken("-")
-            }
-            return
-        }
-
-        val typeLongID = getOrCreateCalendarId(this, calendarNameToCreate)
-
-        if (typeLongID != null) {
-            UserPrefs.setID(typeLongID)
-            runOnUiThread {
-                //findViewById<TextView>(R.id.pp4).text = typeLongID.toString()
-                Toast.makeText(this, "ID календаря ($typeLongID) для '$calendarNameToCreate' збережено.", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            UserPrefs.setID(-1L)
-            runOnUiThread {
-                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-                Toast.makeText(this, "Помилка: не вдалося створити/знайти календар '$calendarNameToCreate'. ID скинуто.", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
@@ -332,4 +373,5 @@ class SettingsActivity : AppCompatActivity() {
 
 
     }
+
 }

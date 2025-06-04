@@ -15,7 +15,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val filesArray = JSONArray(filesJson)
                 val listOfIcsNames = mutableListOf<String>()
                 for (i in 0 until filesArray.length()) {
-                    val fileName = filesArray.getString(i)
+                    val fullPath = filesArray.getString(i)
+                    val fileName = fullPath.substringAfterLast("/")  // залишаємо лише ім’я файлу
                     Log.d("TASK", "Новий файл: $fileName")
                     listOfIcsNames.add(fileName)
                 }
