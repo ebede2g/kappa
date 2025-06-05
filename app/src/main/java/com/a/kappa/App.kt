@@ -30,6 +30,9 @@ object UserPrefs {
     private const val IsOfflineAccount = "is_offline"
     private const val Status = "status"
 
+    private const val Slider_N = "slider_n"
+    private const val Slider_J = "slider_j"
+
 
 
     private lateinit var prefs: SharedPreferences
@@ -85,5 +88,19 @@ object UserPrefs {
     fun setStatus(a: String) {
         prefs.edit().putString(Status, a).apply()
     }
+
+
+
+    fun getSlider_N(): Int = prefs.getInt(Slider_N, 8)
+    fun setSlider_N(a: Int) {
+        prefs.edit().putInt(Slider_N, a).apply()
+    }
+
+    fun getSlider_J(): Int = prefs.getInt(Slider_J, 1532)
+    fun setSlider_J(a: Int) {
+        prefs.edit().putInt(Slider_J, a).apply()
+    }
+
+
 
 }

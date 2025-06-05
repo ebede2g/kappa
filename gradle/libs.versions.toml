@@ -1,6 +1,7 @@
 [versions]
 agp = "8.8.1"
 firebaseMessaging = "23.4.1"
+indicatorseekbar = "2.1.2"
 jackrabbitWebdav = "2.21.4"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -24,6 +25,7 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version.
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessagingKtx" }
 firebase-messaging-v2341 = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
+indicatorseekbar = { module = "com.github.warkiz.widget:indicatorseekbar", version.ref = "indicatorseekbar" }
 jackrabbit-webdav = { module = "org.apache.jackrabbit:jackrabbit-webdav", version.ref = "jackrabbitWebdav" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

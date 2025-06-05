@@ -18,6 +18,7 @@
         app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent" />
 
+
     <EditText
         android:id="@+id/taskTitle"
         android:layout_width="250dp"
@@ -28,6 +29,17 @@
         app:layout_constraintEnd_toEndOf="@+id/taskDesc"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/taskDesc" />
+
+    <EditText
+        android:id="@+id/ShowJ"
+        android:layout_width="83dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="92dp"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/verticalSeekBar_J"
+        app:layout_constraintEnd_toEndOf="@+id/verticalSeekBar_J"
+        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintStart_toStartOf="@+id/verticalSeekBar_J" />
 
     <EditText
         android:id="@+id/taskDesc"
@@ -72,5 +84,58 @@
         android:text="До нагадувань"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <SeekBar
+        android:id="@+id/verticalSeekBar_N"
+        android:layout_width="183dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="116dp"
+        android:max="14"
+        android:min="3"
+        android:progress="8"
+        android:rotation="270"
+        app:layout_constraintBottom_toBottomOf="@+id/btnAddTask"
+        app:layout_constraintStart_toEndOf="@+id/btnAddTask"
+        app:layout_constraintTop_toTopOf="@+id/btnAddTask"
+        app:layout_constraintVertical_bias="0.075" />
+
+    <SeekBar
+        android:id="@+id/verticalSeekBar_J"
+        android:layout_width="183dp"
+        android:layout_height="13dp"
+        android:layout_marginStart="24dp"
+        android:max="2100"
+        android:min="1001"
+        android:progress="1001"
+        android:rotation="270"
+        app:layout_constraintBottom_toBottomOf="@+id/btnAddTask"
+        app:layout_constraintEnd_toEndOf="@+id/verticalSeekBar_N"
+        app:layout_constraintHorizontal_bias="0.282"
+        app:layout_constraintStart_toEndOf="@+id/btnAddTask"
+        app:layout_constraintTop_toTopOf="@+id/btnAddTask"
+        app:layout_constraintVertical_bias="0.075" />
+
+    <TextView
+        android:id="@+id/ShowN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="104dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/verticalSeekBar_N"
+        app:layout_constraintEnd_toEndOf="@+id/verticalSeekBar_N"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="@+id/verticalSeekBar_N" />
+
+    <TextView
+        android:id="@+id/Untill"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/ShowJ"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.585"
+        app:layout_constraintStart_toEndOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/goToReminders" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
