@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "**********",
+    "project_id": "kappa-dav",
+    "storage_bucket": "kappa-dav.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "**********:android:*************",
+        "android_client_info": {
+          "package_name": "com.a.kappa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "****************"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.a.kappa.PermissionHelper.checkAndRequestCalendarPermission
-import java.time.LocalDateTime
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
