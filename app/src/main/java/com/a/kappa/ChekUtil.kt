@@ -34,7 +34,7 @@ object ChekUtil {
             .build()
 
         val request = Request.Builder()
-            .url("http://"+UserPrefs.getIp()+":5000/ping")
+            .url("http://"+UserPrefs.getIp()+":25656/ping")
             .get()
             .build()
 

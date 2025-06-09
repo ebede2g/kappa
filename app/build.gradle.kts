@@ -9,7 +9,6 @@ android {
     compileSdk = 35
 
 
-
     packagingOptions {
         exclude("META-INF/DEPENDENCIES")
         resources.excludes += setOf(
@@ -49,41 +48,26 @@ android {
 }
 
 configurations.all {
-    // 🔥 Уникаємо дублювання класів commons-logging
     exclude(group = "commons-logging", module = "commons-logging")
 }
 
 dependencies {
-    // ✅ iCalendar (.ics) підтримка
-    implementation("org.mnode.ical4j:ical4j:3.2.8")
-
-    // ✅ WebDAV клієнт без commons-logging
-    implementation("org.apache.jackrabbit:jackrabbit-webdav:2.21.4") {
-        exclude(group = "commons-logging", module = "commons-logging")
-    }
-
-
-    // ✅ HTTP клієнт
+    // HTTP клієнт
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
-    // ✅ Jetpack Compose
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.material3)
-
-    // ✅ Firebase
-    implementation (libs.firebase.messaging.v2341)
-    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
+    // Firebase для Push-повідомлень
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0")) // Версію можна оновити
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.messaging.ktx)
 
-    // ✅ AndroidX
+    // AndroidX - Основа додатку
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // ✅ Тестування
+    // Тестування
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

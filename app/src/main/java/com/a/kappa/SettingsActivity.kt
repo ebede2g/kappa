@@ -132,7 +132,7 @@ class SettingsActivity : AppCompatActivity() {
 
             val body = json.toRequestBody("application/json".toMediaType())
             val request = Request.Builder()
-                .url("http://"+ UserPrefs.getIp()+":5000/register_token")
+                .url("http://"+ UserPrefs.getIp()+":25656/register_token")
                 .post(body)
                 .build()
 
