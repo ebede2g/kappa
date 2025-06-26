@@ -56,9 +56,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // Firebase для Push-повідомлень
-    implementation(platform("com.google.firebase:firebase-bom:33.14.0")) // Версію можна оновити
+    implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.messaging.ktx)
+
+
 
     // AndroidX - Основа додатку
     implementation(libs.androidx.core.ktx)

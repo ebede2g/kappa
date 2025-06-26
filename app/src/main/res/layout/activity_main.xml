@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFF8E1"
     tools:context=".MainActivity">
 
     <Button
@@ -13,11 +15,14 @@
         android:layout_height="119dp"
         android:layout_marginBottom="104dp"
         android:text="ПУШ"
+        android:background="@drawable/btn_gradient_green_shiny"
+        android:elevation="6dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/taskDesc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.111"
         app:layout_constraintStart_toStartOf="parent" />
-
 
     <EditText
         android:id="@+id/taskTitle"
@@ -25,6 +30,10 @@
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
         android:hint="Task Title"
+        android:background="@drawable/edittext_rounded_shadow"
+        android:textColor="#212121"
+        android:textColorHint="#757575"
+        android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@+id/taskDesc"
         app:layout_constraintEnd_toEndOf="@+id/taskDesc"
         app:layout_constraintHorizontal_bias="0.0"
@@ -36,6 +45,10 @@
         android:layout_height="46dp"
         android:layout_marginBottom="92dp"
         android:textSize="14sp"
+        android:background="@drawable/edittext_rounded_shadow"
+        android:textColor="#212121"
+        android:textColorHint="#757575"
+        android:padding="12dp"
         app:layout_constraintBottom_toTopOf="@+id/verticalSeekBar_J"
         app:layout_constraintEnd_toEndOf="@+id/verticalSeekBar_J"
         app:layout_constraintHorizontal_bias="0.31"
@@ -46,6 +59,10 @@
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:hint="Task Description"
+        android:background="@drawable/edittext_rounded_shadow"
+        android:textColor="#212121"
+        android:textColorHint="#757575"
+        android:padding="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.385"
@@ -59,6 +76,10 @@
         android:layout_height="47dp"
         android:layout_marginTop="8dp"
         android:text="налаштунки"
+        android:background="@drawable/btn_gradient_blue_shiny"
+        android:elevation="4dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/btnAddTask"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.048"
@@ -72,6 +93,8 @@
         android:layout_height="117dp"
         android:layout_marginTop="8dp"
         android:text="Статус"
+        android:textColor="#212121"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/goToSettings"
         app:layout_constraintTop_toBottomOf="@+id/goToSettings" />
 
@@ -82,6 +105,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:text="До нагадувань"
+        android:background="@drawable/btn_gradient_orange_shiny"
+        android:elevation="4dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -120,7 +147,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="104dp"
-        android:text="TextView"
+        android:text="N"
+        android:textColor="#212121"
         app:layout_constraintBottom_toTopOf="@+id/verticalSeekBar_N"
         app:layout_constraintEnd_toEndOf="@+id/verticalSeekBar_N"
         app:layout_constraintHorizontal_bias="0.52"
@@ -130,12 +158,12 @@
         android:id="@+id/Untill"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:text="Доки трвиатимуть\nнагадування за даних \nналашутвнаь"
+        android:textColor="#212121"
         app:layout_constraintBottom_toTopOf="@+id/ShowJ"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.585"
         app:layout_constraintStart_toEndOf="@+id/status"
         app:layout_constraintTop_toBottomOf="@+id/goToReminders" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

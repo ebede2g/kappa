@@ -3,50 +3,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ListView
-        android:id="@+id/reminderList"
-        android:layout_width="400dp"
-        android:layout_height="546dp"
-        android:layout_marginTop="36dp"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnToSync"
-        app:layout_constraintVertical_bias="0.046" />
+    android:layout_height="match_parent"
+    android:background="#FFF8E1"
+    android:padding="16dp"
+    tools:context=".ReminderActivity">
 
     <Button
         android:id="@+id/goToMain"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/btn_gradient_orange_shiny"
+        android:elevation="4dp"
         android:text="вернутись"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/btnDeleteAll"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnDeleteAll"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_gradient_orange_shiny"
+        android:elevation="4dp"
         android:text="видалити все"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/goToMain"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/btnToSync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/btn_gradient_orange_shiny"
+        android:elevation="4dp"
         android:text="force sync"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/btnDeleteAll"
-        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/goToMain"
         app:layout_constraintTop_toBottomOf="@+id/goToMain" />
 
@@ -54,10 +59,27 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:text="Локально"
+        android:textColor="#212121"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/btnDeleteAll"
-        app:layout_constraintHorizontal_bias="0.484"
+        app:layout_constraintHorizontal_bias="0.99"
         app:layout_constraintStart_toStartOf="@+id/btnDeleteAll"
         app:layout_constraintTop_toBottomOf="@+id/btnDeleteAll" />
+
+    <ListView
+        android:id="@+id/reminderList"
+        android:layout_width="399dp"
+        android:layout_height="554dp"
+        android:background="@drawable/listview_background"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnToSync"
+        app:layout_constraintVertical_bias="0.523" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

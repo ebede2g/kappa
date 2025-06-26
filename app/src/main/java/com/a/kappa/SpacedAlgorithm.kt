@@ -1,4 +1,5 @@
 package com.a.kappa
+import android.util.Log
 import java.time.LocalDateTime
 import java.time.Duration
 import java.time.format.DateTimeFormatter
@@ -86,8 +87,10 @@ object SpacedAlgorithm {
                 for (i in 0 until n * 24 * 60) {
                     if (i % (24 * 60) == 0) {
                         val unitDays = jH.pow(i.toDouble())
-                        val td = Duration.ofMinutes((30 + unitDays * 24 * 60 - 1440).toLong())
-                        val ft = now.plus(td)
+                        val td = Duration.ofMinutes((30 + (unitDays * 24 * 60)/koef - 1440).toLong())
+                        val td2 = Duration.ofMinutes(30 + (unitDays/koef).toLong()*24*60 - 1440)
+                        val ft = now.plus(td2)
+                        Log.d("TASK", now.toString())
                         dtArr.add(ft)
                     }
                 }
@@ -115,10 +118,5 @@ object SpacedAlgorithm {
 
         return "[Останній таск : ~${approxEp.format(formatter)}]"
     }
-
-
-
-
-
 
 }

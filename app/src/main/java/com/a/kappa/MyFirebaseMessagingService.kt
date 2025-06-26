@@ -9,7 +9,7 @@ import org.json.JSONArray
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        if (remoteMessage.data["type"] == "new_files") {
+        if (remoteMessage.data["type"] == "toCreate") {
             val filesJson = remoteMessage.data["files"]
             try {
                 val filesArray = JSONArray(filesJson)
@@ -17,14 +17,42 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 for (i in 0 until filesArray.length()) {
                     val fullPath = filesArray.getString(i)
                     val fileName = fullPath.substringAfterLast("/")
-                    Log.d("TASK", "Новий файл: $fileName")
+                    Log.d("TASK", "Створити файл: $fileName")
                     listOfIcsNames.add(fileName)
                 }
                 TaskUtil.getTaskFromServer(this,listOfIcsNames)
             } catch (e: Exception) {
-                Log.e("TASK", "Помилка при обробці файлів: ${e.message}")
+                Log.e("TASK", "Помилка при додаванні файлів: ${e.message}")
             }
         }
+
+
+        if (remoteMessage.data["type"] == "toRemove") {
+            val filesJson = remoteMessage.data["files"]
+            try {
+                val filesArray = JSONArray(filesJson)
+                val listOfIcsNames = mutableListOf<String>()
+                for (i in 0 until filesArray.length()) {
+                    val fullPath = filesArray.getString(i)
+                    val fileName = fullPath.substringAfterLast("/")
+                    Log.d("TASK", "Видалити файл: $fileName")
+                    listOfIcsNames.add(fileName)
+                }
+                TaskUtil.removeLocalTasks(this,listOfIcsNames)
+            } catch (e: Exception) {
+                Log.e("TASK", "Помилка при видаленні файлів: ${e.message}")
+            }
+        }
+
+
+
+
+
+
+
+
+
+
     }
 }
 

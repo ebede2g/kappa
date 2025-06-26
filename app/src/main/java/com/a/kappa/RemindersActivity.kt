@@ -175,7 +175,6 @@ class RemindersActivity : AppCompatActivity() {
             btnSync.isEnabled = false
             Log.d("TASK", "Спроба синхронізації")
 
-
             ChekUtil.isCalDAVOnlineWithAuth() { online ->
                 if (online) {
                     Log.d("TASK", "все онлайн !")

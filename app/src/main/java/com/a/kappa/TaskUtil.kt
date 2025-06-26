@@ -208,6 +208,43 @@ object TaskUtil {
 
 
 
+    fun removeLocalTasks(context: Context, listOfIcsNames: List<String>) {
+        Log.d("TASK", "----removeLocalTasks----")
+
+        val calName = UserPrefs.getUID()
+        val calendarId = getCalendarIdByName(calName, context)
+        if (calendarId == -1L) {
+            Log.e("TASK", "Календар не знайдено")
+            return
+        }
+
+        for (fileName in listOfIcsNames) {
+            val uid = fileName.removeSuffix(".ics")
+            val eventStartMillis = try {
+                convertLocalDateTimeStringToMillis(uid)
+            } catch (e: Exception) {
+                Log.e("TASK", "Не вдалося конвертувати UID: $uid")
+                continue
+            }
+
+            val selection = "${CalendarContract.Events.CALENDAR_ID} = ? AND ${CalendarContract.Events.DTSTART} = ?"
+            val selectionArgs = arrayOf(calendarId.toString(), eventStartMillis.toString())
+
+            val rowsDeleted = context.contentResolver.delete(
+                CalendarContract.Events.CONTENT_URI,
+                selection,
+                selectionArgs
+            )
+
+            if (rowsDeleted > 0) {
+                Log.d("TASK", "Подію видалено: $fileName")
+            } else {
+                Log.e("TASK", "Подію не знайдено або не вдалося видалити: $fileName")
+            }
+        }
+    }
+
+
 
 
 
