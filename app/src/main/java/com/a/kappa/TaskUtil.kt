@@ -72,11 +72,13 @@ object TaskUtil {
 
         Log.d("TASK_LOG", "Full URL: $fullUrl")
 
+
+        // VEVENT ! не туду!
         val icsContent = """
         BEGIN:VCALENDAR
         VERSION:2.0
         PRODID:-//MyApp//EN
-        BEGIN:VTODO
+        BEGIN:VEVENT
         UID:$fileName
         DTSTAMP:$startDateTime
         DTSTART:$startDateTime
@@ -84,7 +86,7 @@ object TaskUtil {
         SUMMARY:$title
         DESCRIPTION:$description
         STATUS:NEEDS-ACTION
-        END:VTODO
+        END:VEVENT
         END:VCALENDAR
     """.trimIndent()
 

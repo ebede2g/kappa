@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-06-04T18:15:39.504568935Z">
+        <DropdownSelection timestamp="2025-07-14T18:05:29.639703004Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=351dad7" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=/home/mykhailo/.android/avd/Medium_Phone.avd" />
             </handle>
           </Target>
         </DropdownSelection>
