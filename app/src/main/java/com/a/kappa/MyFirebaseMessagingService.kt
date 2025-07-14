@@ -11,7 +11,7 @@ import java.net.URL
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun confirmDelivery(type: String, files: List<String>) {
-        val url = "http:5.58.30.179:25656" // Замінити на справжню IP-адресу
+        val url = "http//:5.58.30.179:25656" // Замінити на справжню IP-адресу
         val json = JSONObject().apply {
             put("type", type)
             put("files", JSONArray(files))
