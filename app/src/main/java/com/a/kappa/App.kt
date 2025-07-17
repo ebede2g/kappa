@@ -33,7 +33,7 @@ object UserPrefs {
     private const val Slider_N = "slider_n"
     private const val Slider_J = "slider_j"
 
-
+    private const val IsSyncing = "is_syncing"
 
     private lateinit var prefs: SharedPreferences
 
@@ -101,6 +101,9 @@ object UserPrefs {
         prefs.edit().putInt(Slider_J, a).apply()
     }
 
-
+    fun IsSyncing(): Boolean = prefs.getBoolean(IsSyncing, false)
+    fun IsSyncing(a: Boolean) {
+        prefs.edit().putBoolean(IsSyncing, a).apply()
+    }
 
 }

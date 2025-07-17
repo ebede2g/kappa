@@ -53,18 +53,6 @@ class SettingsActivity : AppCompatActivity() {
             return
         }
 
-        if (!ChekUtil.isCalDAVCredentialsValid(url, userName, pwd)) {
-            UserPrefs.setID(-1L)
-            UserPrefs.setUID("")
-            runOnUiThread {
-                UserPrefs.setStatus("Севрер не знайдено\n--------\nCalDAV: \nхибний URL і/або пароль")
-                Toast.makeText(this, "CalDAV: невірна URL, ім'я користувача або пароль. Налаштування календаря скинуто.", Toast.LENGTH_LONG).show()
-                UserPrefs.setToken("-")
-                //findViewById<TextView>(R.id.pp3).text = UserPrefs.getUID()
-                //findViewById<TextView>(R.id.pp4).text = UserPrefs.getID().toString()
-            }
-            return
-        }
 
         runOnUiThread {
             UserPrefs.setStatus("Вітаю\n<Онлайн режим>\nВсе готово до роботи!")

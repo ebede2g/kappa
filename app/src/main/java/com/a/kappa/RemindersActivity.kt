@@ -175,30 +175,6 @@ class RemindersActivity : AppCompatActivity() {
             btnSync.isEnabled = false
             Log.d("TASK", "Спроба синхронізації")
 
-            ChekUtil.isCalDAVOnlineWithAuth() { online ->
-                if (online) {
-                    Log.d("TASK", "все онлайн !")
-
-                    syncClinetToServer(this) {
-                        runOnUiThread {
-                            refreshEvents()
-                            Log.d("TASK", "синхронізовано! ок.")
-                            btnSync.isEnabled = true
-                        }
-                    }
-
-                } else {
-                    runOnUiThread {
-                        Log.d("TASK", "Не вдалося Sync з CalDAV")
-                        Toast.makeText(
-                            this,
-                            "Неможливо синхронізуватись. Не підключено сервер або ви сервер поза досяжністю",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        btnSync.isEnabled = true
-                    }
-                }
-            }
         }
 
 

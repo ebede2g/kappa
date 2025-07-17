@@ -7,14 +7,15 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import com.a.kappa.PermissionHelper.checkAndRequestCalendarPermission
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import java.time.LocalDateTime
 import java.time.ZoneId
-
+import java.time.format.DateTimeFormatter
+import kotlin.text.format
 
 class MainActivity : AppCompatActivity() {
     private val PERMISSION_REQUEST_CODE = 1001
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkAndRequestCalendarPermission(this, PERMISSION_REQUEST_CODE)
+        ChekUtil.checkAndRequestCalendarPermission(this, PERMISSION_REQUEST_CODE)
         setContentView(R.layout.activity_main)
 
         val taskTitle = findViewById<EditText>(R.id.taskTitle)
@@ -67,33 +68,13 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
+
+
+
+
         btnAddTask.setOnClickListener{
-            val intervals = SpacedAlgorithm.twlist(UserPrefs.getSlider_N(), UserPrefs.getSlider_J().toDouble()/1000)
-                .map { it.withNano(0) }
-                .toMutableList()
-            //intervals.add(0, LocalDateTime.now().plusMinutes(3).withSecond(0).withNano(0))
-            intervals.forEach {
-                Log.d("TASK", it.toString())
-            }
-
-
-
             val title = taskTitle.text.toString()
             val descr = taskDescr.text.toString()
-
-            ChekUtil.isObserverOnline(this) { online ->
-                if (online) {
-                    intervals.forEach {
-                        val millis = it.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                        TaskUtil.AddServerTask(title, descr, millis)
-                    }
-                } else {
-                    intervals.forEach {
-                        val millis = it.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-                        TaskUtil.AddLocalTasks(this, title, descr, millis)
-                    }
-                }
-            }
 
             taskTitle.setText("")
             taskDescr.setText("")
@@ -119,8 +100,26 @@ class MainActivity : AppCompatActivity() {
         showN.setText(sa_n.toString())
         showJ.setText((sa_j.toFloat()/1000) .toString())
 
-        until.setText(SpacedAlgorithm.untilApro(sa_n,sa_j.toDouble()/1000).toString())
 
+
+
+
+
+
+        fun untilApro(n: Int, j: Double){
+            val now = LocalDateTime.now()
+            val minVal = Math.pow(j, (n - 1).toDouble()).toLong() * 24 * 60
+            val result = now.plusMinutes(minVal)
+
+            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+            val formattedDate = result.format(formatter)
+            until.text = "Останній таск : ~$formattedDate"
+        }
+
+
+
+
+        untilApro(sa_n,sa_j.toDouble()/1000)
 
         seekBarN.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -129,7 +128,8 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(sb: SeekBar?) {}
             override fun onStopTrackingTouch(sb: SeekBar?) {
                 UserPrefs.setSlider_N(sb?.progress ?: 3)
-                until.setText(SpacedAlgorithm.untilApro(UserPrefs.getSlider_N(), UserPrefs.getSlider_J().toDouble()/1000).toString())
+                untilApro(UserPrefs.getSlider_N(),UserPrefs.getSlider_J().toDouble()/1000)
+                //until.setText(SpacedAlgorithm.untilApro(UserPrefs.getSlider_N(), UserPrefs.getSlider_J().toDouble()/1000).toString())
             }
         })
 
@@ -140,7 +140,8 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(sb: SeekBar?) {}
             override fun onStopTrackingTouch(sb: SeekBar?) {
                 UserPrefs.setSlider_J(sb?.progress ?: 1001)
-                until.setText(SpacedAlgorithm.untilApro(UserPrefs.getSlider_N(), UserPrefs.getSlider_J().toDouble()/1000).toString())
+                untilApro(UserPrefs.getSlider_N(),UserPrefs.getSlider_J().toDouble()/1000)
+                //until.setText(SpacedAlgorithm.untilApro(UserPrefs.getSlider_N(), UserPrefs.getSlider_J().toDouble()/1000).toString())
             }
         })
 

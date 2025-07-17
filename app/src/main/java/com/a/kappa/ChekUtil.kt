@@ -1,11 +1,13 @@
 package com.a.kappa
 
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import okhttp3.Call
 import okhttp3.Callback
@@ -17,14 +19,28 @@ import okhttp3.RequestBody
 import okhttp3.Response
 import java.io.IOException
 
+
 object ChekUtil {
 
+    private val CALENDAR_PERMISSIONS = arrayOf(
+        Manifest.permission.WRITE_CALENDAR,
+        Manifest.permission.READ_CALENDAR
+    )
+
+    fun areCalendarPermissionsGranted(activity: Activity): Boolean =
+        CALENDAR_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(activity, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+    fun checkAndRequestCalendarPermission(activity: Activity, requestCode: Int) {
+        if (!areCalendarPermissionsGranted(activity)) {
+            ActivityCompat.requestPermissions(activity, CALENDAR_PERMISSIONS, requestCode)
+        }
+    }
 
     fun hasPermissionToCalendar(ctx: Context): Boolean {
         return ContextCompat.checkSelfPermission(ctx, Manifest.permission.WRITE_CALENDAR) == PackageManager.PERMISSION_GRANTED
     }
-
-
 
     fun isServerOnline(onResult: (Boolean) -> Unit) {
         val client = OkHttpClient.Builder()
@@ -34,7 +50,7 @@ object ChekUtil {
             .build()
 
         val request = Request.Builder()
-            .url("http://"+UserPrefs.getIp()+":25656/ping")
+            .url("https://"+UserPrefs.getIp()+":25656/ping")
             .get()
             .build()
 
@@ -54,8 +70,6 @@ object ChekUtil {
             }
         })
     }
-
-
 
     fun isObserverOnline(ctx: Context, callback: (Boolean) -> Unit) {
         if (!hasPermissionToCalendar(ctx)) {
@@ -92,79 +106,6 @@ object ChekUtil {
                 }
             }
         }
-    }
-
-
-
-
-
-
-
-
-
-
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun isCalDAVCredentialsValid(caldavUrl: String, userName: String, userPwd: String): Boolean {
-        if (caldavUrl.isBlank() || userName.isBlank() || userPwd.isBlank()) {
-            return false
-        }
-
-        val client = OkHttpClient()
-        val xmlBody = """
-        <?xml version="1.0" encoding="UTF-8"?>
-        <d:propfind xmlns:d="DAV:">
-          <d:prop>
-            <d:current-user-principal />
-          </d:prop>
-        </d:propfind>
-        """.trimIndent()
-
-        val request = Request.Builder()
-            .url(caldavUrl)
-            .method("PROPFIND", RequestBody.create("application/xml".toMediaTypeOrNull(), xmlBody))
-            .header("Authorization", Credentials.basic(userName, userPwd))
-            .header("Depth", "0")
-            .build()
-
-        return try {
-            val response: Response = client.newCall(request).execute()
-            val isValid = response.isSuccessful || response.code == 207
-            response.close()
-            isValid
-        } catch (e: IOException) {
-            false
-        } catch (e: IllegalArgumentException) {
-            false
-        }
-    }
-
-
-
-    fun isCalDAVOnlineWithAuth(callback: (Boolean) -> Unit) {
-        val url = UserPrefs.getUrl()
-        val username = UserPrefs.getUserName()
-        val password = UserPrefs.getPwd()
-
-        val credential = Credentials.basic(username, password)
-
-        val request = Request.Builder()
-            .url(url)
-            .method("OPTIONS", null)
-            .header("Authorization", credential)
-            .build()
-
-        OkHttpClient().newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                callback(false)
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val online = response.isSuccessful
-                response.close()
-                callback(online)
-            }
-        })
     }
 
 

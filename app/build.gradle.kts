@@ -55,9 +55,9 @@ dependencies {
     // HTTP клієнт
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
+    implementation("com.google.firebase:firebase-messaging:24.0.3")
     // Firebase для Push-повідомлень
     implementation(platform("com.google.firebase:firebase-bom:33.14.0"))
-    implementation(libs.firebase.messaging)
     implementation(libs.firebase.messaging.ktx)
 
 
